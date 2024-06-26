@@ -12,6 +12,7 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import shop.mtcoding.bank.domain.user.UserEnum;
+import shop.mtcoding.bank.util.CustomResponseUtil;
 
 @Configuration
 public class SecurityConfig {
@@ -40,9 +41,7 @@ public class SecurityConfig {
 
         // Exception 가로채기
         http.exceptionHandling().authenticationEntryPoint((request, response, exception) -> {
-            response.setContentType("application/json; charset=utf-8");
-            response.setStatus(403);
-            response.getWriter().println("error");
+            CustomResponseUtil.unAuthentication(response, "로그인을 진행해 주세요");
         });
 
         http.authorizeRequests()
