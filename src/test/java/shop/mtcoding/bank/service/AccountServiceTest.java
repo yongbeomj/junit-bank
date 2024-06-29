@@ -14,11 +14,14 @@ import shop.mtcoding.bank.domain.user.User;
 import shop.mtcoding.bank.domain.user.UserRepository;
 import shop.mtcoding.bank.dto.account.AccountReqDto.AccountSaveReqDto;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
+import static shop.mtcoding.bank.dto.account.AccountRespDto.AccountListRespDto;
 import static shop.mtcoding.bank.dto.account.AccountRespDto.AccountSaveRespDto;
 
 @ExtendWith(MockitoExtension.class)
@@ -63,5 +66,30 @@ public class AccountServiceTest extends DummyObject {
 
         // then
         assertThat(accountSaveRespDto.getNumber()).isEqualTo(1111L);
+    }
+
+    @Test
+    public void 계좌목록보기_유저별_test() throws Exception {
+        // given
+        Long userId = 1L;
+
+        // stub 1
+        User ssar = newMockUser(userId, "ssar", "쌀");
+        when(userRepository.findById(userId)).thenReturn(Optional.of(ssar));
+
+        // stub 2
+        Account ssarAccount1 = newMockAccount(1L, 1111L, 1000L, ssar);
+        Account ssarAccount2 = newMockAccount(2L, 2222L, 1000L, ssar);
+        List<Account> accountList = Arrays.asList(ssarAccount1, ssarAccount2);
+        when(accountRepository.findByUser_Id(any())).thenReturn(accountList);
+
+        // when
+        AccountListRespDto accountListRespDto = accountService.계좌목록보기_유저별(userId);
+        String responseBody = om.writeValueAsString(accountListRespDto);
+        System.out.println("테스트 : " + responseBody);
+
+        // then
+        assertThat(accountListRespDto.getFullname()).isEqualTo("쌀");
+        assertThat(accountListRespDto.getAccountDtos().size()).isEqualTo(2);
     }
 }
