@@ -8,20 +8,23 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
-import org.springframework.transaction.annotation.Transactional;
 import shop.mtcoding.bank.config.dummy.DummyObject;
 import shop.mtcoding.bank.domain.user.UserRepository;
 import shop.mtcoding.bank.dto.user.UserReqDto.LoginReqDto;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 // 테스트는 독립적이어야 하므로 테스트 순서 정하지 말 것!
-@Transactional // 테스트에서 기본값 롤백. 2개 테스트 진행할 때마다 BeforeEach가 실행되어 중복되므로 롤백 필요.
+// @Transactional // 테스트에서 기본값 롤백. 2개 테스트 진행할 때마다 BeforeEach가 실행되어 중복되므로 롤백 필요.
+// SpringBootTest 하는 곳에는 전부 teardown.sql를 붙여주자
+@Sql("classpath:db/teardown.sql") // 실행시점 : BeforeEach 실행 직전마다!
 @ActiveProfiles("test")
 @AutoConfigureMockMvc
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.MOCK)
@@ -29,8 +32,10 @@ public class JwtAuthenticationFilterTest extends DummyObject {
 
     @Autowired
     private ObjectMapper om;
+
     @Autowired
     private MockMvc mvc;
+
     @Autowired
     private UserRepository userRepository;
 

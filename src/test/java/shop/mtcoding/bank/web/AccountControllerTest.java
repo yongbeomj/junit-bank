@@ -10,9 +10,9 @@ import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.TestExecutionEvent;
 import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
-import org.springframework.transaction.annotation.Transactional;
 import shop.mtcoding.bank.config.dummy.DummyObject;
 import shop.mtcoding.bank.domain.account.Account;
 import shop.mtcoding.bank.domain.account.AccountRepository;
@@ -21,11 +21,16 @@ import shop.mtcoding.bank.domain.user.UserRepository;
 import shop.mtcoding.bank.dto.account.AccountReqDto.AccountSaveReqDto;
 import shop.mtcoding.bank.handler.ex.CustomApiException;
 
+import javax.persistence.EntityManager;
+
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@Transactional
+// 테스트 시 @Transaction 으로 제어할 경우 데이터가 계속 insert되어 의도치않은 pk가 추가 생성될 수 있음
+// 그러므로 Controller test 시 sql파일 생성하여 truncate로 데이터를 삭제 (@Transaction은 롤백만 하므로)
+// @Transactional
+@Sql("classpath:db/teardown.sql")
 @ActiveProfiles("test")
 @AutoConfigureMockMvc
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.MOCK)
@@ -33,12 +38,18 @@ public class AccountControllerTest extends DummyObject {
 
     @Autowired
     private MockMvc mvc;
+
     @Autowired
     private ObjectMapper om;
+
     @Autowired
     private UserRepository userRepository;
+
     @Autowired
     private AccountRepository accountRepository;
+
+    @Autowired
+    private EntityManager em;
 
     @BeforeEach
     public void setUp() {
@@ -46,6 +57,7 @@ public class AccountControllerTest extends DummyObject {
         User cos = userRepository.save(newUser("cos", "코스"));
         Account ssarAccount = accountRepository.save(newAccount(1111L, ssar));
         Account cosAccount = accountRepository.save(newAccount(2222L, cos));
+        em.clear();
     }
 
     // jwt token -> 인증필터 -> 시큐리티 세션 생성
