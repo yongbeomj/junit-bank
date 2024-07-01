@@ -76,11 +76,10 @@ public class AccountRespDto {
             private String sender;
             private String receiver;
             private Long amount;
-
-            @JsonIgnore
-            private Long depositAccountBalance; // 클라이언트에게 전달x -> 서비스단에서 테스트 용도
             private String tel;
             private String createdAt;
+            @JsonIgnore
+            private Long depositAccountBalance; // 클라이언트에게 전달x -> 서비스단에서 테스트 용도
 
             public TransactionDto(Transaction transaction) {
                 this.id = transaction.getId();
