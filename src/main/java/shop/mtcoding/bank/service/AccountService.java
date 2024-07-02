@@ -85,6 +85,7 @@ public class AccountService {
 
         // 입금 (해당 계좌 balance 조정 - update - 더티체킹)
         depositAccountPS.deposit(accountDepositReqDto.getAmount());
+        // System.out.println("테스트 : ssarAccount1 : 잔액이 얼마지 : " + depositAccountPS.getBalance());
 
         // 거래내역 남기기
         Transaction transaction = Transaction.builder()
