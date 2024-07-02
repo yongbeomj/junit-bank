@@ -67,7 +67,7 @@ public class AccountReqDto {
         private Long amount;
 
         @NotEmpty
-        @Pattern(regexp = "DEPOSIT")
+        @Pattern(regexp = "WITHDRAW")
         private String gubun;
     }
 }

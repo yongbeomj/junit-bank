@@ -18,7 +18,6 @@ import shop.mtcoding.bank.domain.account.Account;
 import shop.mtcoding.bank.domain.account.AccountRepository;
 import shop.mtcoding.bank.domain.user.User;
 import shop.mtcoding.bank.domain.user.UserRepository;
-import shop.mtcoding.bank.dto.account.AccountReqDto;
 import shop.mtcoding.bank.dto.account.AccountReqDto.AccountSaveReqDto;
 import shop.mtcoding.bank.handler.ex.CustomApiException;
 
@@ -27,6 +26,8 @@ import javax.persistence.EntityManager;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static shop.mtcoding.bank.dto.account.AccountReqDto.AccountDepositReqDto;
+import static shop.mtcoding.bank.dto.account.AccountReqDto.AccountWithdrawReqDto;
 
 // 테스트 시 @Transaction 으로 제어할 경우 데이터가 계속 insert되어 의도치않은 pk가 추가 생성될 수 있음
 // 그러므로 Controller test 시 sql파일 생성하여 truncate로 데이터를 삭제 (@Transaction은 롤백만 하므로)
@@ -129,7 +130,7 @@ public class AccountControllerTest extends DummyObject {
     @Test
     public void depositAccount_test() throws Exception {
         // given
-        AccountReqDto.AccountDepositReqDto accountDepositReqDto = new AccountReqDto.AccountDepositReqDto();
+        AccountDepositReqDto accountDepositReqDto = new AccountDepositReqDto();
         accountDepositReqDto.setNumber(1111L);
         accountDepositReqDto.setAmount(100L);
         accountDepositReqDto.setGubun("DEPOSIT");
@@ -146,5 +147,28 @@ public class AccountControllerTest extends DummyObject {
 
         // then
         resultActions.andExpect(status().isCreated());
+    }
+
+    @WithUserDetails(value = "ssar", setupBefore = TestExecutionEvent.TEST_EXECUTION)
+    @Test
+    public void withdrawAccount_test() throws Exception {
+        // given
+        AccountWithdrawReqDto accountWithdrawReqDto = new AccountWithdrawReqDto();
+        accountWithdrawReqDto.setNumber(1111L);
+        accountWithdrawReqDto.setPassword(1234L);
+        accountWithdrawReqDto.setAmount(100L);
+        accountWithdrawReqDto.setGubun("WITHDRAW");
+
+        String requestBody = om.writeValueAsString(accountWithdrawReqDto);
+        System.out.println("테스트 : " + requestBody);
+
+        // when
+        ResultActions resultActions = mvc
+                .perform(post("/api/s/account/withdraw").content(requestBody).contentType(MediaType.APPLICATION_JSON));
+        String responseBody = resultActions.andReturn().getResponse().getContentAsString();
+        System.out.println("테스트 : " + responseBody);
+
+        // then
+
     }
 }
