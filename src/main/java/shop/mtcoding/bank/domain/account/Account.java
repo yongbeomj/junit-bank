@@ -56,7 +56,7 @@ public class Account {
     }
 
     public void checkOwner(Long userId) {
-        if (user.getId() != userId) { // Laze 로딩이어도 id를 조회할 때는 select 쿼리가 날라가지 않는다
+        if (user.getId().longValue() != userId.longValue()) { // Laze 로딩이어도 id를 조회할 때는 select 쿼리가 날라가지 않는다
             throw new CustomApiException("계좌 소유자가 아닙니다");
         }
     }
@@ -66,7 +66,7 @@ public class Account {
     }
 
     public void checkSamePassword(Long password) {
-        if (this.password.longValue() != password) {
+        if (this.password.longValue() != password.longValue()) {
             throw new CustomApiException("계좌 비밀번호 검증에 실패했습니다");
         }
     }
