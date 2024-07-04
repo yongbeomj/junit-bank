@@ -20,7 +20,7 @@ public class TransactionController {
     @GetMapping("/s/account/{number}/transaction")
     public ResponseEntity<?> findTransactionList(@PathVariable Long number,
                                                  @RequestParam(value = "gubun", defaultValue = "ALL") String gubun,
-                                                 @RequestParam(value = "page", defaultValue = "ALL") Integer page,
+                                                 @RequestParam(value = "page", defaultValue = "0") Integer page,
                                                  @AuthenticationPrincipal LoginUser loginUser) {
 
         TransactionListRespDto transactionListRespDto = transactionService.입출금목록보기(loginUser.getUser().getId(), number, gubun, page);

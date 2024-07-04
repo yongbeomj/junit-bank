@@ -142,13 +142,13 @@ public class AccountServiceTest extends DummyObject {
 
         // when
         AccountDepositRespDto accountDepositRespDto = accountService.계좌입금(accountDepositReqDto);
-        System.out.println("테스트 : 트랜잭션 입금계좌 잔액 : " + accountDepositRespDto.getTransactionDto().getDepositAccountBalance());
+        System.out.println("테스트 : 트랜잭션 입금계좌 잔액 : " + accountDepositRespDto.getTransaction().getDepositAccountBalance());
         System.out.println("테스트 : 계좌쪽 잔액 : " + ssarAccount1.getBalance());
         System.out.println("테스트 : 계좌쪽 잔액 : " + ssarAccount2.getBalance());
 
         // then
         assertThat(ssarAccount1.getBalance()).isEqualTo(1100L);
-        assertThat(accountDepositRespDto.getTransactionDto().getDepositAccountBalance()).isEqualTo(1100L);
+        assertThat(accountDepositRespDto.getTransaction().getDepositAccountBalance()).isEqualTo(1100L);
     }
 
     @Test
