@@ -106,7 +106,7 @@ public class DummyObject {
     }
 
     protected Transaction newWithdrawTransaction(Account account, AccountRepository accountRepository) {
-        account.deposit(100L);
+        account.withdraw(100L);
 
         // Repository Test에서는 더티체킹 됨
         // Controller Test에서는 더티체킹 안됨
