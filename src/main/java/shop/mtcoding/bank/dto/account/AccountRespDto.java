@@ -60,12 +60,12 @@ public class AccountRespDto {
     public static class AccountDepositRespDto {
         private Long id; // 계좌 ID
         private Long number; // 계좌번호
-        private TransactionDto transactionDto;
+        private TransactionDto transaction;
 
         public AccountDepositRespDto(Account account, Transaction transaction) {
             this.id = account.getId();
             this.number = account.getNumber();
-            this.transactionDto = new TransactionDto(transaction);
+            this.transaction = new TransactionDto(transaction);
         }
 
         @Setter
@@ -102,13 +102,13 @@ public class AccountRespDto {
         private Long id; // 계좌 ID
         private Long number; // 계좌번호
         private Long balance; // 잔액
-        private TransactionDto transactionDto;
+        private TransactionDto transaction;
 
         public AccountWithdrawRespDto(Account account, Transaction transaction) {
             this.id = account.getId();
             this.number = account.getNumber();
             this.balance = account.getBalance();
-            this.transactionDto = new TransactionDto(transaction);
+            this.transaction = new TransactionDto(transaction);
         }
 
         @Setter
@@ -138,13 +138,13 @@ public class AccountRespDto {
         private Long id; // 계좌 ID
         private Long number; // 계좌번호
         private Long balance; // 출금계좌 잔액
-        private TransactionDto transactionDto;
+        private TransactionDto transaction;
 
         public AccountTransferRespDto(Account account, Transaction transaction) {
             this.id = account.getId();
             this.number = account.getNumber();
             this.balance = account.getBalance();
-            this.transactionDto = new TransactionDto(transaction);
+            this.transaction = new TransactionDto(transaction);
         }
 
         @Setter
