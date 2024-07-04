@@ -36,6 +36,8 @@ public class Account {
     @ManyToOne(fetch = FetchType.LAZY) // account.getUser().아무필드호출() == Lazy 발동
     private User user;
 
+    // 양방향 매핑 - 쿼리를 보면 맘에 안들게 나올 것
+
     @CreatedDate // Insert
     @Column(nullable = false)
     private LocalDateTime createdAt;
